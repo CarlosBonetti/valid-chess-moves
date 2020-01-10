@@ -2,7 +2,8 @@ import {
   getPositionX,
   getPositionY,
   isValidKnightMove,
-  getValidKnightMoves
+  getValidKnightMoves,
+  isValidPosition
 } from "../chess";
 
 describe("getPositionX", () => {
@@ -18,6 +19,16 @@ describe("getPositionY", () => {
     expect(getPositionY("a1")).toEqual(1);
     expect(getPositionY("d4")).toEqual(4);
     expect(getPositionY("h8")).toEqual(8);
+  });
+});
+
+describe("isValidPosition", () => {
+  it("should return true if the parameter is a valid chess position in algebraic notation", () => {
+    expect(isValidPosition("a1")).toEqual(true);
+    expect(isValidPosition("x5")).toEqual(false);
+    expect(isValidPosition("a9")).toEqual(false);
+    expect(isValidPosition("")).toEqual(false);
+    expect(isValidPosition(undefined)).toEqual(false);
   });
 });
 

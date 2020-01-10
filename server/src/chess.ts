@@ -40,6 +40,14 @@ export function getPositionY(position: Position) {
 }
 
 /**
+ * Checks whether the position is a valid chess position in algebraic notation.
+ * @param position
+ */
+export function isValidPosition(position: any) {
+  return ALL_POSITIONS.includes(position);
+}
+
+/**
  * Valid chess positions in algebraic notation.
  */
 // prettier-ignore
