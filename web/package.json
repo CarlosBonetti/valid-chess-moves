@@ -4,6 +4,7 @@
   "description": "Web client of Valid Chess Moves",
   "private": true,
   "repository": "https://github.com/CarlosBonetti/valid-chess-moves",
+  "proxy": "http://localhost:8000",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
