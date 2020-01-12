@@ -1,7 +1,7 @@
 import React, { useCallback } from "react"
 import styled from "styled-components"
-import { ALL_POSITIONS, Position, Piece } from "./types"
 import { Square, SquareProps } from "./Square"
+import { ALL_POSITIONS, Position } from "./types"
 
 export interface BoardProps {
   squares: { [key in Position]?: Pick<SquareProps, "piece" | "highlighted" | "marked"> }

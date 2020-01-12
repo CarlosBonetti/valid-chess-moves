@@ -1,15 +1,10 @@
-import React, { useCallback, useReducer, useState, useEffect } from "react"
-
+import React, { useCallback, useEffect, useReducer } from "react"
+import reducer, { getBoardSquares, highlightValidMoves, initialState, selectSquare } from "../../ducks/knight-moves"
 import { Board } from "./Board"
-import { Position, ALL_POSITIONS } from "./types"
-import reducer, { selectSquare, highlightValidMoves } from "../../ducks/knight-moves"
+import { Position } from "./types"
 
 export function KnightMovesGame() {
-  const [state, dispatch] = useReducer(reducer, {
-    selected: null,
-    knightPosition: null,
-    validMoves: []
-  })
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const handleSquareClick = useCallback((position: Position) => dispatch(selectSquare(position)), [])
 
@@ -23,20 +18,5 @@ export function KnightMovesGame() {
     }
   }, [state.knightPosition, state.selected])
 
-  return (
-    <Board
-      squares={ALL_POSITIONS.reduce(
-        (prev, curr) => ({
-          ...prev,
-          [curr]: {
-            highlighted: state.selected === curr,
-            piece: state.knightPosition === curr ? "Knight" : null,
-            marked: state.validMoves.indexOf(curr) >= 0
-          }
-        }),
-        {}
-      )}
-      onSquareClick={handleSquareClick}
-    />
-  )
+  return <Board squares={getBoardSquares(state)} onSquareClick={handleSquareClick} />
 }
