@@ -35,13 +35,25 @@ describe("reducers", () => {
           validMoves: []
         })
       })
-      it("should change the Knight position and clear selection when previous selected square was the Knight position", () => {
+      it("should change the Knight position and clear selection and valid moves when previous selected square was the Knight position", () => {
         expect(
-          reduce({ knightPosition: "h4", selected: "h4", validMoves: [] }, { type: SELECT_SQUARE, position: "g2" })
+          reduce({ knightPosition: "h4", selected: "h4", validMoves: ["g2"] }, { type: SELECT_SQUARE, position: "g2" })
         ).toEqual({
           knightPosition: "g2",
           selected: null,
           validMoves: []
+        })
+      })
+      it("should not move the Knight if it is not a valid move", () => {
+        expect(
+          reduce(
+            { knightPosition: "a1", selected: "a1", validMoves: ["c2", "b3"] },
+            { type: SELECT_SQUARE, position: "a2" }
+          )
+        ).toEqual({
+          knightPosition: "a1",
+          selected: "a1",
+          validMoves: ["c2", "b3"]
         })
       })
     })

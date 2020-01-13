@@ -45,12 +45,19 @@ export default function reducer(state: KnightMovesState, action: KnightMovesActi
 export function reduceSelectSquare(state: KnightMovesState, position: Position): KnightMovesState {
   if (state.knightPosition === null) {
     // Knight has no position, game is starting
-    return { selected: position, knightPosition: position, validMoves: [] }
+    return { ...state, selected: position, knightPosition: position, validMoves: [] }
   }
 
   if (state.knightPosition === state.selected) {
     // Previous selection was the knight position, time to move it
-    return { ...state, selected: null, knightPosition: position }
+
+    if (state.validMoves.indexOf(position) < 0) {
+      // Not a valid move, skip the action
+      return state
+    } else {
+      // Valid move, change Knight position
+      return { ...state, selected: null, knightPosition: position, validMoves: [] }
+    }
   }
 
   return { ...state, selected: position }

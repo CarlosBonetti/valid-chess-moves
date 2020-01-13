@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer } from "react"
+import React, { useCallback, useEffect, useReducer, useMemo } from "react"
 import reducer, { getBoardSquares, highlightValidMoves, initialState, selectSquare } from "../../ducks/knight-moves"
 import { Board } from "./Board"
 import { Position } from "./types"
@@ -6,6 +6,7 @@ import { Position } from "./types"
 export function KnightMovesGame() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const squares = useMemo(() => getBoardSquares(state), [state])
   const handleSquareClick = useCallback((position: Position) => dispatch(selectSquare(position)), [])
 
   useEffect(() => {
@@ -18,5 +19,5 @@ export function KnightMovesGame() {
     }
   }, [state.knightPosition, state.selected])
 
-  return <Board squares={getBoardSquares(state)} onSquareClick={handleSquareClick} />
+  return <Board squares={squares} onSquareClick={handleSquareClick} />
 }
