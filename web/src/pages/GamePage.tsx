@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useReducer, useMemo } from "react"
+import React, { useCallback, useEffect, useReducer, useMemo, useState } from "react"
 import reducer, { getBoardSquares, setValidMoves, initialState, selectSquare, restart } from "../ducks/knight-moves"
 import { Board, Position } from "../components/chess"
 import styled from "styled-components"
@@ -8,27 +8,30 @@ import { Link } from "react-router-dom"
 
 export function GamePage() {
   const [state, dispatch] = useReducer(reducer, initialState)
+  const [turns, setTurns] = useState(2)
 
   useEffect(() => {
     dispatch(setValidMoves([]))
 
-    if (state.knightPosition) {
-      fetch(`/api/valid-moves?piece=Knight&from=${state.knightPosition}&turns=2`)
+    if (state.knightPosition && turns) {
+      fetch(`/api/valid-moves?piece=Knight&from=${state.knightPosition}&turns=${turns}`)
         .then(res => res.json())
         .then(data => dispatch(setValidMoves(data.validMoves)))
     }
-  }, [state.knightPosition])
+  }, [state.knightPosition, turns])
 
   const squares = useMemo(() => getBoardSquares(state), [state])
   const handleSquareClick = useCallback((position: Position) => dispatch(selectSquare(position)), [])
   const handleRestartClick = useCallback(() => dispatch(restart()), [])
+  const handleTurnsChange = useCallback(e => setTurns(e.target.value), [])
 
   return (
     <Container>
       <Board squares={squares} onSquareClick={handleSquareClick} />
       <Controls>
         <p>
-          Showing next <input type="number" min={1} max={10} style={{ width: "3rem" }} /> valid moves
+          Showing next <TurnsInput type="number" min={1} max={10} value={turns} onChange={handleTurnsChange} /> valid
+          moves
         </p>
 
         <p>Click or touch a square to select Knight's initial position...</p>
@@ -55,4 +58,8 @@ const Controls = styled.div`
   background: #fff;
   border-radius: 3px;
   padding: 1rem 1rem;
+`
+
+const TurnsInput = styled.input`
+  width: 3rem;
 `
