@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { Position, Piece } from "./types"
 import { getPositionColor } from "./util"
 import * as pieces from "./pieces"
+import { WithTheme } from "../../theme"
 
 export interface SquareProps {
   /**
@@ -61,12 +62,12 @@ export function Square(props: SquareProps) {
 const SquareDiv = styled.div`
   position: relative;
   cursor: pointer;
-  background: ${(props: SquareProps) =>
+  background: ${(props: SquareProps & WithTheme) =>
     props.highlighted
-      ? "#ff9"
+      ? props.theme.board.highlightBg
       : getPositionColor(props.position) === "white"
-      ? "rgb(237, 238, 209)"
-      : "rgb(119, 153, 82)"};
+      ? props.theme.board.whiteBg
+      : props.theme.board.blackBg};
   border-width: 6px;
   border-style: solid;
   border-color: ${(props: SquareProps) => (props.marked ? "rgba(49, 46, 43, 0.65)" : "transparent")};

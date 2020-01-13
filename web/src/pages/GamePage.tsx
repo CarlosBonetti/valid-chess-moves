@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useReducer, useMemo } from "react"
-import reducer, { getBoardSquares, highlightValidMoves, initialState, selectSquare } from "../../ducks/knight-moves"
-import { Board } from "./Board"
-import { Position } from "./types"
+import reducer, { getBoardSquares, highlightValidMoves, initialState, selectSquare } from "../ducks/knight-moves"
+import { Board, Position } from "../components/chess"
 
-export function KnightMovesGame() {
+export function GamePage() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const squares = useMemo(() => getBoardSquares(state), [state])
