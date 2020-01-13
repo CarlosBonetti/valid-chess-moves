@@ -21,7 +21,14 @@ export function Board(props: BoardProps) {
   return (
     <BoardContainer>
       {ALL_POSITIONS.map(position => (
-        <Square key={position} position={position} onClick={handleSquareClick(position)} {...squares[position]} />
+        <Square
+          key={position}
+          position={position}
+          onClick={handleSquareClick(position)}
+          showColumn={position.charAt(1) === "1"}
+          showRow={position.charAt(0) === "a"}
+          {...squares[position]}
+        />
       ))}
     </BoardContainer>
   )
