@@ -1,4 +1,24 @@
 /**
+ * Calculates the valid knight moves in n turns given a starting position.
+ * @param from The starting position.
+ * @param turns The number of turns to calculate.
+ * @returns An array of array of valid move positions. The first array index is the turn number.
+ */
+export function getValidKnightMovesInTurns(from: Position, turns = 1): Position[][] {
+  const res = [getValidKnightMoves(from)]
+
+  for (let currentTurn = 1; currentTurn < turns; currentTurn++) {
+    const moves = res[currentTurn - 1]
+      .map(pos => new Set(getValidKnightMoves(pos)))
+      .reduce((prevSet, currSet) => new Set([...prevSet, ...currSet]), new Set())
+
+    res.push([...moves].sort())
+  }
+
+  return res
+}
+
+/**
  * Calculates the valid immediate knight moves given a starting position.
  * @param from The starting position.
  * @returns An array of valid move positions.

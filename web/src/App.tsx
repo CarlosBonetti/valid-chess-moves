@@ -21,8 +21,9 @@ export function App() {
 }
 
 const AppContainer = styled.div`
-  display: flex;
-  justify-content: center;
+  padding: 1rem;
+  max-width: 960px;
+  margin: 0 auto;
 `
 
 const GlobalStyle = createGlobalStyle`
@@ -30,6 +31,7 @@ const GlobalStyle = createGlobalStyle`
     background: #312e2b;
     color: #fff;
     font-family: 'Public Sans', sans-serif;
+    margin: 0;
   }
 
   p {

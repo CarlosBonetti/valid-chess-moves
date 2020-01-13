@@ -41,13 +41,18 @@ export interface SquareProps {
   showRow?: boolean
 
   /**
+   * Generic text label to show on the upper right corner of the square.
+   */
+  label?: string
+
+  /**
    * Called when the Square is clicked or touched
    */
   onClick?(): void
 }
 
 export function Square(props: SquareProps) {
-  const { piece, position, showColumn, showRow } = props
+  const { piece, position, showColumn, showRow, label } = props
   const PieceComponent = piece ? pieces[piece] : null
 
   return (
@@ -55,6 +60,7 @@ export function Square(props: SquareProps) {
       {PieceComponent && <PieceComponent />}
       {showColumn && <ColumnLabel>{position.charAt(0)}</ColumnLabel>}
       {showRow && <RowLabel>{position.charAt(1)}</RowLabel>}
+      {label && <Label>{label}</Label>}
     </SquareDiv>
   )
 }
@@ -76,14 +82,20 @@ const SquareDiv = styled.div`
 
 const ColumnLabel = styled.span`
   position: absolute;
-  bottom: 0;
-  right: 0;
+  bottom: -1.5rem;
+  right: calc(50% - 0.25rem);
   font-weight: bold;
-  color: rgba(49, 46, 43);
+  color: #fff;
   font-size: 14px;
 `
 
 const RowLabel = styled(ColumnLabel)`
+  top: calc(50% - 0.5rem);
+  left: -1.25rem;
+`
+
+const Label = styled(ColumnLabel)`
   top: 0;
-  left: 0;
+  right: 0;
+  color: ${(props: WithTheme) => props.theme.bg};
 `

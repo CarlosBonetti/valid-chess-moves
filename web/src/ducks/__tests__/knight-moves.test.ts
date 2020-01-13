@@ -5,16 +5,18 @@ import reduce, {
   HIGHLIGHT_VALID_MOVES,
   initialState,
   selectSquare,
-  SELECT_SQUARE
+  SELECT_SQUARE,
+  restart,
+  RESTART
 } from "../knight-moves"
 
 describe("reducers", () => {
   describe("default reducer", () => {
     describe(`${HIGHLIGHT_VALID_MOVES} action`, () => {
       it("should change current validMoves state", () => {
-        expect(reduce(initialState, { type: HIGHLIGHT_VALID_MOVES, validMoves: ["a3", "g4"] })).toEqual({
+        expect(reduce(initialState, { type: HIGHLIGHT_VALID_MOVES, validMoves: [["a3", "g4"]] })).toEqual({
           ...initialState,
-          validMoves: ["a3", "g4"]
+          validMoves: [["a3", "g4"]]
         })
       })
     })
@@ -37,7 +39,10 @@ describe("reducers", () => {
       })
       it("should change the Knight position and clear selection and valid moves when previous selected square was the Knight position", () => {
         expect(
-          reduce({ knightPosition: "h4", selected: "h4", validMoves: ["g2"] }, { type: SELECT_SQUARE, position: "g2" })
+          reduce(
+            { knightPosition: "h4", selected: "h4", validMoves: [["g2"]] },
+            { type: SELECT_SQUARE, position: "g2" }
+          )
         ).toEqual({
           knightPosition: "g2",
           selected: null,
@@ -47,19 +52,19 @@ describe("reducers", () => {
       it("should not move the Knight if it is not a valid move", () => {
         expect(
           reduce(
-            { knightPosition: "a1", selected: "a1", validMoves: ["c2", "b3"] },
+            { knightPosition: "a1", selected: "a1", validMoves: [["c2", "b3"]] },
             { type: SELECT_SQUARE, position: "a2" }
           )
         ).toEqual({
           knightPosition: "a1",
           selected: "a1",
-          validMoves: ["c2", "b3"]
+          validMoves: [["c2", "b3"]]
         })
       })
       it("should not move Knight and deselect its square if clicked again at the same position", () => {
         expect(
           reduce(
-            { knightPosition: "a1", selected: "a1", validMoves: ["c2", "b3"] },
+            { knightPosition: "a1", selected: "a1", validMoves: [["c2", "b3"]] },
             { type: SELECT_SQUARE, position: "a1" }
           )
         ).toEqual({
@@ -67,6 +72,20 @@ describe("reducers", () => {
           selected: null,
           validMoves: []
         })
+      })
+    })
+    describe(`${RESTART} action`, () => {
+      it("should restore to the initial state", () => {
+        expect(
+          reduce(
+            {
+              knightPosition: "a1",
+              selected: "a1",
+              validMoves: [["c2", "b3"]]
+            },
+            { type: RESTART }
+          )
+        ).toEqual(initialState)
       })
     })
   })
@@ -82,8 +101,14 @@ describe("action creators", () => {
 
   describe("highlightValidMoves", () => {
     it("should create an action that represents a change of the valid moves", () => {
-      expect(highlightValidMoves(["a3", "b4"])).toEqual({ type: HIGHLIGHT_VALID_MOVES, validMoves: ["a3", "b4"] })
-      expect(highlightValidMoves(["g7", "c5"])).toEqual({ type: HIGHLIGHT_VALID_MOVES, validMoves: ["g7", "c5"] })
+      expect(highlightValidMoves([["a3", "b4"]])).toEqual({ type: HIGHLIGHT_VALID_MOVES, validMoves: [["a3", "b4"]] })
+      expect(highlightValidMoves([["g7", "c5"]])).toEqual({ type: HIGHLIGHT_VALID_MOVES, validMoves: [["g7", "c5"]] })
+    })
+  })
+
+  describe("restart", () => {
+    it("should create an action that represents a restart of the game", () => {
+      expect(restart()).toEqual({ type: RESTART })
     })
   })
 })
@@ -94,25 +119,23 @@ describe("selectors", () => {
       const squares = getBoardSquares(initialState)
       expect(Object.keys(squares)).toEqual(ALL_POSITIONS)
       ;(Object.keys(squares) as Position[]).forEach((position: Position) => {
-        expect(squares[position]).toEqual({ highlighted: false, marked: false, piece: null })
+        expect(squares[position]).toEqual({ highlighted: false, marked: false, piece: null, label: "" })
       })
     })
     it("should return a map of the board state given a filled state", () => {
       const squares = getBoardSquares({
         knightPosition: "a1",
         selected: "a2",
-        validMoves: ["a3", "a4"]
+        validMoves: [["a3", "a4"], ["h7", "h8"], ["h8"]]
       })
 
-      expect(squares).toEqual(
-        expect.objectContaining({
-          a1: { highlighted: false, marked: false, piece: "Knight" },
-          a2: { highlighted: true, marked: false, piece: null },
-          a3: { highlighted: false, marked: true, piece: null },
-          a4: { highlighted: false, marked: true, piece: null },
-          a5: { highlighted: false, marked: false, piece: null }
-        })
-      )
+      expect(squares["a1"]).toEqual({ highlighted: false, marked: false, piece: "Knight", label: "" })
+      expect(squares["a2"]).toEqual({ highlighted: true, marked: false, piece: null, label: "" })
+      expect(squares["a3"]).toEqual({ highlighted: false, marked: true, piece: null, label: "1" })
+      expect(squares["a4"]).toEqual({ highlighted: false, marked: true, piece: null, label: "1" })
+      expect(squares["a5"]).toEqual({ highlighted: false, marked: false, piece: null, label: "" })
+      expect(squares["h7"]).toEqual({ highlighted: false, marked: false, piece: null, label: "2" })
+      expect(squares["h8"]).toEqual({ highlighted: false, marked: false, piece: null, label: "2,3" })
     })
   })
 })

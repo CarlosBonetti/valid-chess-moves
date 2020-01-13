@@ -15,15 +15,17 @@ export interface KnightMovesState {
   /**
    * The current valid moves, given the current selected position.
    */
-  validMoves: Position[]
+  validMoves: Position[][]
 }
 
 export const SELECT_SQUARE = "valid-chess-moves/knight-moves/SELECT_SQUARE"
 export const HIGHLIGHT_VALID_MOVES = "valid-chess-moves/knight-moves/HIGHLIGHT_VALID_MOVES"
+export const RESTART = "valid-chess-moves/knight-moves/RESTART"
 
 type KnightMovesAction =
   | { type: typeof SELECT_SQUARE; position: Position }
-  | { type: typeof HIGHLIGHT_VALID_MOVES; validMoves: Position[] }
+  | { type: typeof HIGHLIGHT_VALID_MOVES; validMoves: Position[][] }
+  | { type: typeof RESTART }
 
 export const initialState: KnightMovesState = {
   selected: null,
@@ -37,6 +39,8 @@ export default function reducer(state: KnightMovesState, action: KnightMovesActi
       return reduceSelectSquare(state, action.position)
     case HIGHLIGHT_VALID_MOVES:
       return { ...state, validMoves: action.validMoves }
+    case RESTART:
+      return { ...initialState }
     default:
       return state
   }
@@ -54,12 +58,12 @@ export function reduceSelectSquare(state: KnightMovesState, position: Position):
     if (position === state.knightPosition) {
       // Selected is square is the current Knight position, so just deselect the square
       return { ...state, selected: null, validMoves: [] }
-    } else if (state.validMoves.indexOf(position) < 0) {
-      // Not a valid move, skip the action
-      return state
-    } else {
+    } else if (state.validMoves[0]?.indexOf(position) >= 0) {
       // Valid move, change Knight position
       return { ...state, selected: null, knightPosition: position, validMoves: [] }
+    } else {
+      // Not a valid move, skip the action
+      return state
     }
   }
 
@@ -76,10 +80,12 @@ export const selectSquare = (position: Position): KnightMovesAction => ({ type: 
  * Creates an action which changes the current valid moves.
  * @param validMoves
  */
-export const highlightValidMoves = (validMoves: Position[]): KnightMovesAction => ({
+export const highlightValidMoves = (validMoves: Position[][]): KnightMovesAction => ({
   type: HIGHLIGHT_VALID_MOVES,
   validMoves
 })
+
+export const restart = (): KnightMovesAction => ({ type: RESTART })
 
 /**
  * State selector that returns a map of the board square states, given the current game state.
@@ -93,7 +99,12 @@ export const getBoardSquares = (state: KnightMovesState): BoardProps["squares"] 
       [curr]: {
         highlighted: state.selected === curr,
         piece: state.knightPosition === curr ? "Knight" : null,
-        marked: state.validMoves?.indexOf(curr) >= 0
+        marked: state.validMoves[0]?.indexOf(curr) >= 0,
+        // !!state.validMoves?.find(arr => arr.indexOf(curr) >= 0)
+        label: state.validMoves
+          ?.map((arr, index) => (arr.indexOf(curr) >= 0 ? index + 1 : null))
+          .filter(res => !!res)
+          .join(",")
       }
     }),
     {}

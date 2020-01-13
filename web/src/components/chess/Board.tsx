@@ -4,7 +4,7 @@ import { Square, SquareProps } from "./Square"
 import { ALL_POSITIONS, Position } from "./types"
 
 export interface BoardProps {
-  squares: { [key in Position]?: Pick<SquareProps, "piece" | "highlighted" | "marked"> }
+  squares: { [key in Position]?: Pick<SquareProps, "piece" | "highlighted" | "marked" | "label"> }
   onSquareClick(position: Position): void
 }
 

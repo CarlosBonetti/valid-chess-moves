@@ -5,6 +5,7 @@ import { Link, LinkProps } from "react-router-dom"
 
 export interface ButtonProps {
   primary?: boolean
+  block?: boolean
 }
 
 export const ButtonLink = (props: ButtonProps & LinkProps) => (
@@ -16,7 +17,6 @@ export const Button = styled.button(
     display: inline-block;
     border-radius: 3px;
     padding: 0.75rem 2.5rem;
-    margin: 0.5rem 1rem;
     background: ${props.primary ? props.theme.board.whiteBg : "transparent"};
     color: ${props.primary ? props.theme.bg : "white"};
     border-width: 2px;
@@ -25,5 +25,11 @@ export const Button = styled.button(
     text-align: center;
     text-decoration: none;
     font-weight: bold;
+    cursor: pointer;
+    width: ${props.block && "100%"};
+
+    &:active {
+      box-shadow: inset #ccc 0 0 8px;
+    }
   `
 )

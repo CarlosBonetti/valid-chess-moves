@@ -1,4 +1,11 @@
-import { getPositionX, getPositionY, isValidKnightMove, getValidKnightMoves, isValidPosition } from "../chess"
+import {
+  getPositionX,
+  getPositionY,
+  isValidKnightMove,
+  getValidKnightMoves,
+  isValidPosition,
+  getValidKnightMovesInTurns
+} from "../chess"
 
 describe("getPositionX", () => {
   it("should return the numeric X position given an algebraic notation position", () => {
@@ -47,5 +54,15 @@ describe("getValidKnightMove", () => {
     expect(getValidKnightMoves("h1")).toEqual(["f2", "g3"])
     expect(getValidKnightMoves("h8")).toEqual(["f7", "g6"])
     expect(getValidKnightMoves("d5")).toEqual(["b4", "b6", "c3", "c7", "e3", "e7", "f4", "f6"])
+  })
+})
+
+describe("getValidKnightMovesInTurns", () => {
+  it("should return an array of array of all valid knight moves in n turns starting from a given position", () => {
+    expect(getValidKnightMovesInTurns("a1", 1)).toEqual([["b3", "c2"]])
+    expect(getValidKnightMovesInTurns("a1", 2)).toEqual([
+      ["b3", "c2"],
+      ["a1", "a3", "a5", "b4", "c1", "c5", "d2", "d4", "e1", "e3"]
+    ])
   })
 })

@@ -5,7 +5,17 @@ describe("GET /api/valid-moves", () => {
   it("should return a list of valid moves for the Knight given a start position", async () => {
     const res = await request(app).get("/api/valid-moves?piece=Knight&from=h8")
     expect(res.status).toEqual(200)
-    expect(res.body).toEqual({ validMoves: ["f7", "g6"] })
+    expect(res.body).toEqual({ validMoves: [["f7", "g6"]] })
+  })
+  it("should return a list of valid moves for the Knight given a start position and number of turns", async () => {
+    const res = await request(app).get("/api/valid-moves?piece=Knight&from=h8&turns=2")
+    expect(res.status).toEqual(200)
+    expect(res.body).toEqual({
+      validMoves: [
+        ["f7", "g6"],
+        ["d6", "d8", "e5", "e7", "f4", "f8", "g5", "h4", "h6", "h8"]
+      ]
+    })
   })
   it("should return an error required parameters are not given", async () => {
     const res = await request(app).get("/api/valid-moves")

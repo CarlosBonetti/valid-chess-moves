@@ -1,11 +1,11 @@
 import express from "express"
-import { getValidKnightMoves, isValidPosition } from "./chess"
+import { getValidKnightMoves, isValidPosition, getValidKnightMovesInTurns } from "./chess"
 
 export const app = express()
 app.use(express.json())
 
 app.get("/api/valid-moves", (req, res) => {
-  const { piece, from } = req.query
+  const { piece, from, turns } = req.query
 
   if (!piece || !from) {
     return res.status(400).json({
@@ -25,5 +25,5 @@ app.get("/api/valid-moves", (req, res) => {
     })
   }
 
-  return res.json({ validMoves: getValidKnightMoves(from) })
+  return res.json({ validMoves: getValidKnightMovesInTurns(from, turns) })
 })
