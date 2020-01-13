@@ -52,13 +52,15 @@ export function reduceSelectSquare(state: KnightMovesState, position: Position):
     return { ...state, selected: position, knightPosition: position }
   }
 
+  if (position === state.selected) {
+    // Selected is square is the previous selected square, so just deselect it
+    return { ...state, selected: null }
+  }
+
   if (state.knightPosition === state.selected) {
     // Previous selection was the knight position, time to move it?
 
-    if (position === state.knightPosition) {
-      // Selected is square is the current Knight position, so just deselect the square
-      return { ...state, selected: null }
-    } else if (state.validMoves[0]?.indexOf(position) >= 0) {
+    if (state.validMoves[0]?.indexOf(position) >= 0) {
       // Valid move, change Knight position
       return { ...state, selected: null, knightPosition: position, validMoves: [] }
     } else {
