@@ -56,6 +56,18 @@ describe("reducers", () => {
           validMoves: ["c2", "b3"]
         })
       })
+      it("should not move Knight and deselect its square if clicked again at the same position", () => {
+        expect(
+          reduce(
+            { knightPosition: "a1", selected: "a1", validMoves: ["c2", "b3"] },
+            { type: SELECT_SQUARE, position: "a1" }
+          )
+        ).toEqual({
+          knightPosition: "a1",
+          selected: null,
+          validMoves: []
+        })
+      })
     })
   })
 })

@@ -49,9 +49,12 @@ export function reduceSelectSquare(state: KnightMovesState, position: Position):
   }
 
   if (state.knightPosition === state.selected) {
-    // Previous selection was the knight position, time to move it
+    // Previous selection was the knight position, time to move it?
 
-    if (state.validMoves.indexOf(position) < 0) {
+    if (position === state.knightPosition) {
+      // Selected is square is the current Knight position, so just deselect the square
+      return { ...state, selected: null, validMoves: [] }
+    } else if (state.validMoves.indexOf(position) < 0) {
       // Not a valid move, skip the action
       return state
     } else {
