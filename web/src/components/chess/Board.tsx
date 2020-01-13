@@ -11,12 +11,7 @@ export interface BoardProps {
 export function Board(props: BoardProps) {
   const { squares, onSquareClick } = props
 
-  const handleSquareClick = useCallback(
-    position => () => {
-      onSquareClick(position)
-    },
-    [onSquareClick]
-  )
+  const handleSquareClick = useCallback(position => () => onSquareClick(position), [onSquareClick])
 
   return (
     <BoardContainer>

@@ -19,12 +19,12 @@ export interface KnightMovesState {
 }
 
 export const SELECT_SQUARE = "valid-chess-moves/knight-moves/SELECT_SQUARE"
-export const HIGHLIGHT_VALID_MOVES = "valid-chess-moves/knight-moves/HIGHLIGHT_VALID_MOVES"
+export const SET_VALID_MOVES = "valid-chess-moves/knight-moves/HIGHLIGHT_VALID_MOVES"
 export const RESTART = "valid-chess-moves/knight-moves/RESTART"
 
 type KnightMovesAction =
   | { type: typeof SELECT_SQUARE; position: Position }
-  | { type: typeof HIGHLIGHT_VALID_MOVES; validMoves: Position[][] }
+  | { type: typeof SET_VALID_MOVES; validMoves: Position[][] }
   | { type: typeof RESTART }
 
 export const initialState: KnightMovesState = {
@@ -37,7 +37,7 @@ export default function reducer(state: KnightMovesState, action: KnightMovesActi
   switch (action.type) {
     case SELECT_SQUARE:
       return reduceSelectSquare(state, action.position)
-    case HIGHLIGHT_VALID_MOVES:
+    case SET_VALID_MOVES:
       return { ...state, validMoves: action.validMoves }
     case RESTART:
       return { ...initialState }
@@ -49,7 +49,7 @@ export default function reducer(state: KnightMovesState, action: KnightMovesActi
 export function reduceSelectSquare(state: KnightMovesState, position: Position): KnightMovesState {
   if (state.knightPosition === null) {
     // Knight has no position, game is starting
-    return { ...state, selected: position, knightPosition: position, validMoves: [] }
+    return { ...state, selected: position, knightPosition: position }
   }
 
   if (state.knightPosition === state.selected) {
@@ -57,7 +57,7 @@ export function reduceSelectSquare(state: KnightMovesState, position: Position):
 
     if (position === state.knightPosition) {
       // Selected is square is the current Knight position, so just deselect the square
-      return { ...state, selected: null, validMoves: [] }
+      return { ...state, selected: null }
     } else if (state.validMoves[0]?.indexOf(position) >= 0) {
       // Valid move, change Knight position
       return { ...state, selected: null, knightPosition: position, validMoves: [] }
@@ -80,8 +80,8 @@ export const selectSquare = (position: Position): KnightMovesAction => ({ type: 
  * Creates an action which changes the current valid moves.
  * @param validMoves
  */
-export const highlightValidMoves = (validMoves: Position[][]): KnightMovesAction => ({
-  type: HIGHLIGHT_VALID_MOVES,
+export const setValidMoves = (validMoves: Position[][]): KnightMovesAction => ({
+  type: SET_VALID_MOVES,
   validMoves
 })
 
@@ -99,13 +99,26 @@ export const getBoardSquares = (state: KnightMovesState): BoardProps["squares"] 
       [curr]: {
         highlighted: state.selected === curr,
         piece: state.knightPosition === curr ? "Knight" : null,
-        marked: state.validMoves[0]?.indexOf(curr) >= 0,
-        // !!state.validMoves?.find(arr => arr.indexOf(curr) >= 0)
-        label: state.validMoves
-          ?.map((arr, index) => (arr.indexOf(curr) >= 0 ? index + 1 : null))
-          .filter(res => !!res)
-          .join(",")
+        marked: isKnightSelected(state) && state.validMoves[0]?.indexOf(curr) >= 0,
+        label: isKnightSelected(state) ? getSquareLabel(state, curr) : null
       }
     }),
     {}
   )
+
+/**
+ * Selector that indicates whether the current selection is the Knight's position
+ */
+export const isKnightSelected = (state: KnightMovesState) =>
+  state.selected !== null && state.selected === state.knightPosition
+
+/**
+ * Selector that returns a square label.
+ * @param state The current state.
+ * @param position The position to retrieve the label for.
+ */
+export const getSquareLabel = (state: KnightMovesState, position: Position) =>
+  state.validMoves
+    ?.map((arr, index) => (arr.indexOf(position) >= 0 ? index + 1 : null))
+    .filter(res => !!res)
+    .join(",") || null

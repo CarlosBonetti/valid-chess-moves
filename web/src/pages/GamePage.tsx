@@ -1,11 +1,5 @@
 import React, { useCallback, useEffect, useReducer, useMemo } from "react"
-import reducer, {
-  getBoardSquares,
-  highlightValidMoves,
-  initialState,
-  selectSquare,
-  restart
-} from "../ducks/knight-moves"
+import reducer, { getBoardSquares, setValidMoves, initialState, selectSquare, restart } from "../ducks/knight-moves"
 import { Board, Position } from "../components/chess"
 import styled from "styled-components"
 import { Button } from "../components/ui"
@@ -16,14 +10,14 @@ export function GamePage() {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   useEffect(() => {
-    if (state.knightPosition && state.selected === state.knightPosition) {
+    dispatch(setValidMoves([]))
+
+    if (state.knightPosition) {
       fetch(`/api/valid-moves?piece=Knight&from=${state.knightPosition}&turns=2`)
         .then(res => res.json())
-        .then(data => dispatch(highlightValidMoves(data.validMoves)))
-    } else {
-      dispatch(highlightValidMoves([]))
+        .then(data => dispatch(setValidMoves(data.validMoves)))
     }
-  }, [state.knightPosition, state.selected])
+  }, [state.knightPosition])
 
   const squares = useMemo(() => getBoardSquares(state), [state])
   const handleSquareClick = useCallback((position: Position) => dispatch(selectSquare(position)), [])
@@ -31,9 +25,7 @@ export function GamePage() {
 
   return (
     <Container>
-      <BoardContainer>
-        <Board squares={squares} onSquareClick={handleSquareClick} />
-      </BoardContainer>
+      <Board squares={squares} onSquareClick={handleSquareClick} />
       <Controls>
         <p>
           Showing next <input type="number" min={1} max={10} style={{ width: "3rem" }} /> valid moves
@@ -55,10 +47,6 @@ const Container = styled.div`
   grid-template-columns: 1fr 300px;
   grid-column-gap: 1rem;
   justify-items: center;
-`
-
-const BoardContainer = styled.div`
-  max-height: 95vh;
 `
 
 const Controls = styled.div`

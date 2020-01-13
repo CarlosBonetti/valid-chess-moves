@@ -1,20 +1,23 @@
 import { ALL_POSITIONS, Position } from "../../components/chess/types"
 import reduce, {
   getBoardSquares,
-  highlightValidMoves,
-  HIGHLIGHT_VALID_MOVES,
+  setValidMoves,
+  SET_VALID_MOVES,
   initialState,
   selectSquare,
   SELECT_SQUARE,
   restart,
-  RESTART
+  RESTART,
+  isKnightSelected,
+  getSquareLabel,
+  KnightMovesState
 } from "../knight-moves"
 
 describe("reducers", () => {
   describe("default reducer", () => {
-    describe(`${HIGHLIGHT_VALID_MOVES} action`, () => {
+    describe(`${SET_VALID_MOVES} action`, () => {
       it("should change current validMoves state", () => {
-        expect(reduce(initialState, { type: HIGHLIGHT_VALID_MOVES, validMoves: [["a3", "g4"]] })).toEqual({
+        expect(reduce(initialState, { type: SET_VALID_MOVES, validMoves: [["a3", "g4"]] })).toEqual({
           ...initialState,
           validMoves: [["a3", "g4"]]
         })
@@ -70,7 +73,7 @@ describe("reducers", () => {
         ).toEqual({
           knightPosition: "a1",
           selected: null,
-          validMoves: []
+          validMoves: [["c2", "b3"]]
         })
       })
     })
@@ -99,10 +102,10 @@ describe("action creators", () => {
     })
   })
 
-  describe("highlightValidMoves", () => {
+  describe("setValidMoves", () => {
     it("should create an action that represents a change of the valid moves", () => {
-      expect(highlightValidMoves([["a3", "b4"]])).toEqual({ type: HIGHLIGHT_VALID_MOVES, validMoves: [["a3", "b4"]] })
-      expect(highlightValidMoves([["g7", "c5"]])).toEqual({ type: HIGHLIGHT_VALID_MOVES, validMoves: [["g7", "c5"]] })
+      expect(setValidMoves([["a3", "b4"]])).toEqual({ type: SET_VALID_MOVES, validMoves: [["a3", "b4"]] })
+      expect(setValidMoves([["g7", "c5"]])).toEqual({ type: SET_VALID_MOVES, validMoves: [["g7", "c5"]] })
     })
   })
 
@@ -119,23 +122,50 @@ describe("selectors", () => {
       const squares = getBoardSquares(initialState)
       expect(Object.keys(squares)).toEqual(ALL_POSITIONS)
       ;(Object.keys(squares) as Position[]).forEach((position: Position) => {
-        expect(squares[position]).toEqual({ highlighted: false, marked: false, piece: null, label: "" })
+        expect(squares[position]).toEqual({ highlighted: false, marked: false, piece: null, label: null })
       })
     })
     it("should return a map of the board state given a filled state", () => {
       const squares = getBoardSquares({
         knightPosition: "a1",
-        selected: "a2",
+        selected: "a1",
         validMoves: [["a3", "a4"], ["h7", "h8"], ["h8"]]
       })
 
-      expect(squares["a1"]).toEqual({ highlighted: false, marked: false, piece: "Knight", label: "" })
-      expect(squares["a2"]).toEqual({ highlighted: true, marked: false, piece: null, label: "" })
+      expect(squares["a1"]).toEqual({ highlighted: true, marked: false, piece: "Knight", label: null })
+      expect(squares["a2"]).toEqual({ highlighted: false, marked: false, piece: null, label: null })
       expect(squares["a3"]).toEqual({ highlighted: false, marked: true, piece: null, label: "1" })
       expect(squares["a4"]).toEqual({ highlighted: false, marked: true, piece: null, label: "1" })
-      expect(squares["a5"]).toEqual({ highlighted: false, marked: false, piece: null, label: "" })
+      expect(squares["a5"]).toEqual({ highlighted: false, marked: false, piece: null, label: null })
       expect(squares["h7"]).toEqual({ highlighted: false, marked: false, piece: null, label: "2" })
       expect(squares["h8"]).toEqual({ highlighted: false, marked: false, piece: null, label: "2,3" })
+    })
+  })
+  describe("isKnightSelected", () => {
+    it("should return true if current selection is the same as the Knight position", () => {
+      expect(isKnightSelected({ ...initialState, selected: null, knightPosition: null })).toEqual(false)
+      expect(isKnightSelected({ ...initialState, selected: "a1", knightPosition: "a2" })).toEqual(false)
+      expect(isKnightSelected({ ...initialState, selected: null, knightPosition: "a2" })).toEqual(false)
+      expect(isKnightSelected({ ...initialState, selected: "a1", knightPosition: null })).toEqual(false)
+      expect(isKnightSelected({ ...initialState, selected: "a1", knightPosition: "a1" })).toEqual(true)
+    })
+  })
+  describe("getSquareLabel", () => {
+    it("should a label indicating the valid moves of that position", () => {
+      const state: KnightMovesState = {
+        ...initialState,
+        selected: "a1",
+        knightPosition: "a1",
+        validMoves: [
+          ["b3", "c2"],
+          ["a1", "a3"],
+          ["b3", "c2"]
+        ]
+      }
+
+      expect(getSquareLabel(state, "c3")).toEqual(null)
+      expect(getSquareLabel(state, "b3")).toEqual("1,3")
+      expect(getSquareLabel(state, "a1")).toEqual("2")
     })
   })
 })
