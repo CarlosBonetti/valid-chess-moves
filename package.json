@@ -6,7 +6,9 @@
   "license": "MIT",
   "scripts": {
     "install": "yarn --cwd server install && yarn --cwd web install",
-    "build": "yarn --cwd server build && yarn --cwd web build"
+    "build": "yarn --cwd server build && yarn --cwd web build",
+    "start": "yarn --cwd server start:dist",
+    "test": "yarn --cwd server test && yarn --cwd web test --watchAll=false"
   },
   "husky": {
     "hooks": {
