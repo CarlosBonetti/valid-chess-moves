@@ -1,20 +1,21 @@
 import React, { useCallback } from "react"
-import styled from "styled-components"
+import styled, { css } from "styled-components"
 import { Square, SquareProps } from "./Square"
 import { ALL_POSITIONS, Position } from "./types"
 
 export interface BoardProps {
-  squares: { [key in Position]?: Pick<SquareProps, "piece" | "highlighted" | "marked" | "label"> }
-  onSquareClick(position: Position): void
+  squares?: { [key in Position]?: Pick<SquareProps, "piece" | "highlighted" | "marked" | "label"> }
+  size?: number
+  onSquareClick?(position: Position): void
 }
 
 export function Board(props: BoardProps) {
-  const { squares, onSquareClick } = props
+  const { squares = {}, onSquareClick } = props
 
-  const handleSquareClick = useCallback(position => () => onSquareClick(position), [onSquareClick])
+  const handleSquareClick = useCallback(position => () => onSquareClick && onSquareClick(position), [onSquareClick])
 
   return (
-    <BoardContainer>
+    <BoardContainer {...props}>
       {ALL_POSITIONS.map(position => (
         <Square
           key={position}
@@ -29,8 +30,14 @@ export function Board(props: BoardProps) {
   )
 }
 
-const BoardContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(8, 72px);
-  grid-template-rows: repeat(8, 72px);
-`
+Board.defaultProps = {
+  size: 72
+} as Partial<BoardProps>
+
+const BoardContainer = styled.div(
+  (props: BoardProps) => css`
+    display: grid;
+    grid-template-columns: repeat(8, ${props.size}px);
+    grid-template-rows: repeat(8, ${props.size}px);
+  `
+)

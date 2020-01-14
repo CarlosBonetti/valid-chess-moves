@@ -14,6 +14,7 @@ export const ButtonLink = (props: ButtonProps & LinkProps) => (
 
 export const Button = styled.button(
   (props: ButtonProps & WithTheme) => css`
+    font-family: ${props.theme.fontFamily};
     display: inline-block;
     border-radius: 3px;
     padding: 0.75rem 2.5rem;

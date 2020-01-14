@@ -30,22 +30,22 @@ export function GamePage() {
       <Board squares={squares} onSquareClick={handleSquareClick} />
       <Controls>
         <p>
-          Showing next <TurnsInput type="number" min={1} max={10} value={turns} onChange={handleTurnsChange} /> valid
-          moves
+          Showing next <TurnsInput type="number" min={1} max={10} value={turns} onChange={handleTurnsChange} /> turns of
+          valid moves.
         </p>
 
         {state.knightPosition === null && (
-          <Message>Click or touch a square to select Knight's initial position...</Message>
+          <Message>Click or touch a square to select Knight's initial position</Message>
         )}
 
         {state.knightPosition !== null && state.selected === state.knightPosition && (
-          <Message>Click on a valid position to move the Knight...</Message>
+          <Message>Click on a valid position to move the Knight</Message>
         )}
 
-        {state.knightPosition !== null && state.selected === null && <Message>Select a square...</Message>}
+        {state.knightPosition !== null && state.selected === null && <Message>Select a square</Message>}
 
         {state.selected !== null && state.selected !== state.knightPosition && (
-          <Message>Select the Knight's position to see its valid moves...</Message>
+          <Message>Select the Knight's position to see its valid moves</Message>
         )}
 
         <Button primary block onClick={handleRestartClick}>

@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 import { Knight } from "../components/chess"
-import { ButtonLink } from "../components/ui"
+import { ButtonLink, ButtonsContainer } from "../components/ui"
 
 export function InitialPage() {
   return (
@@ -23,12 +23,12 @@ export function InitialPage() {
         <b>Take the tour</b> to see how this app works or <b>start the game</b> directly.
       </p>
 
-      <Buttons>
+      <ButtonsContainer>
         <ButtonLink to="/tour/1">Take the tour</ButtonLink>
         <ButtonLink to="/game" primary>
           Start game
         </ButtonLink>
-      </Buttons>
+      </ButtonsContainer>
     </Container>
   )
 }
@@ -43,15 +43,4 @@ const Divider = styled.hr`
   border: none;
   border-top: 1px solid #666;
   margin: 2rem 0;
-`
-
-const Buttons = styled.div`
-  display: grid;
-  grid-gap: 1rem;
-  justify-content: center;
-  grid-template-columns: repeat(2, 220px);
-
-  @media only screen and (max-width: 600px) {
-    grid-template-columns: 1fr;
-  }
 `

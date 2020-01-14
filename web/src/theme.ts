@@ -1,4 +1,5 @@
 export const theme = {
+  fontFamily: "'Public Sans', sans-serif",
   bg: "#312e2b",
   board: {
     whiteBg: "rgb(237, 238, 209)",
