@@ -2,9 +2,11 @@ import express from "express"
 import path from "path"
 import { getValidKnightMovesInTurns, isValidPosition } from "./chess"
 
+const PUBLIC_PATH = path.join(__dirname, "../../web/build")
+
 export const app = express()
 app.use(express.json())
-app.use(express.static(path.join(__dirname, "../../web/build")))
+app.use(express.static(PUBLIC_PATH))
 
 app.get("/api/valid-moves", (req, res) => {
   const { piece, from, turns } = req.query
@@ -29,3 +31,5 @@ app.get("/api/valid-moves", (req, res) => {
 
   return res.json({ validMoves: getValidKnightMovesInTurns(from, turns) })
 })
+
+app.get("*", (req, res) => res.sendFile(`${PUBLIC_PATH}/index.html`))

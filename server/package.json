@@ -9,6 +9,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node src/index.ts",
+    "start:dist": "node dist/index.js",
     "build": "tsc",
     "test": "jest"
   },
