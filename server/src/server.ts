@@ -1,8 +1,10 @@
 import express from "express"
-import { getValidKnightMoves, isValidPosition, getValidKnightMovesInTurns } from "./chess"
+import path from "path"
+import { getValidKnightMovesInTurns, isValidPosition } from "./chess"
 
 export const app = express()
 app.use(express.json())
+app.use(express.static(path.join(__dirname, "../../web/build")))
 
 app.get("/api/valid-moves", (req, res) => {
   const { piece, from, turns } = req.query
