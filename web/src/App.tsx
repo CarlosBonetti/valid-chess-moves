@@ -40,5 +40,13 @@ const GlobalStyle = createGlobalStyle(
     p {
       line-height: 1.5;
     }
+
+    a {
+      color: #fff;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
   `
 )

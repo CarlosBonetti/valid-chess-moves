@@ -1,10 +1,8 @@
-import React, { useCallback, useEffect, useReducer, useMemo, useState } from "react"
-import reducer, { getBoardSquares, setValidMoves, initialState, selectSquare, restart } from "../ducks/knight-moves"
-import { Board, Position } from "../components/chess"
+import React, { useCallback, useEffect, useMemo, useReducer, useState } from "react"
 import styled from "styled-components"
-import { Button } from "../components/ui"
-import { WithTheme } from "../theme"
-import { Link } from "react-router-dom"
+import { Board, Position } from "../components/chess"
+import { GameControls } from "../components/GameControls"
+import reducer, { getBoardSquares, initialState, restart, selectSquare, setValidMoves } from "../ducks/knight-moves"
 
 export function GamePage() {
   const [state, dispatch] = useReducer(reducer, initialState)
@@ -23,36 +21,12 @@ export function GamePage() {
   const squares = useMemo(() => getBoardSquares(state), [state])
   const handleSquareClick = useCallback((position: Position) => dispatch(selectSquare(position)), [])
   const handleRestartClick = useCallback(() => dispatch(restart()), [])
-  const handleTurnsChange = useCallback(e => setTurns(e.target.value), [])
+  const handleTurnsChange = useCallback(turns => setTurns(turns), [])
 
   return (
     <Container>
       <Board squares={squares} onSquareClick={handleSquareClick} />
-      <Controls>
-        <p>
-          Showing next <TurnsInput type="number" min={1} max={10} value={turns} onChange={handleTurnsChange} /> turns of
-          valid moves.
-        </p>
-
-        {state.knightPosition === null && (
-          <Message>Click or touch a square to select Knight's initial position</Message>
-        )}
-
-        {state.knightPosition !== null && state.selected === state.knightPosition && (
-          <Message>Click on a valid position to move the Knight</Message>
-        )}
-
-        {state.knightPosition !== null && state.selected === null && <Message>Select a square</Message>}
-
-        {state.selected !== null && state.selected !== state.knightPosition && (
-          <Message>Select the Knight's position to see its valid moves</Message>
-        )}
-
-        <Button primary block onClick={handleRestartClick}>
-          Restart game
-        </Button>
-        <Link to="/">Back to initial page</Link>
-      </Controls>
+      <GameControls state={state} turns={turns} onTurnsChange={handleTurnsChange} onRestartClick={handleRestartClick} />
     </Container>
   )
 }
@@ -62,22 +36,4 @@ const Container = styled.div`
   grid-template-columns: 1fr 300px;
   grid-column-gap: 1rem;
   justify-items: center;
-`
-
-const Controls = styled.div`
-  color: ${(props: WithTheme) => props.theme.bg};
-  font-size: 0.875rem;
-  background: #fff;
-  border-radius: 3px;
-  padding: 1rem 1rem;
-`
-
-const TurnsInput = styled.input`
-  width: 3rem;
-`
-
-const Message = styled.p`
-  background: #eee;
-  border-radius: 3px;
-  padding: 0.5rem 1rem;
 `
