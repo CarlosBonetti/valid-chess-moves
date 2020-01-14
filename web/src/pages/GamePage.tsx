@@ -34,7 +34,19 @@ export function GamePage() {
           moves
         </p>
 
-        <p>Click or touch a square to select Knight's initial position...</p>
+        {state.knightPosition === null && (
+          <Message>Click or touch a square to select Knight's initial position...</Message>
+        )}
+
+        {state.knightPosition !== null && state.selected === state.knightPosition && (
+          <Message>Click on a valid position to move the Knight...</Message>
+        )}
+
+        {state.knightPosition !== null && state.selected === null && <Message>Select a square...</Message>}
+
+        {state.selected !== null && state.selected !== state.knightPosition && (
+          <Message>Select the Knight's position to see its valid moves...</Message>
+        )}
 
         <Button primary block onClick={handleRestartClick}>
           Restart game
@@ -62,4 +74,10 @@ const Controls = styled.div`
 
 const TurnsInput = styled.input`
   width: 3rem;
+`
+
+const Message = styled.p`
+  background: #eee;
+  border-radius: 3px;
+  padding: 0.5rem 1rem;
 `

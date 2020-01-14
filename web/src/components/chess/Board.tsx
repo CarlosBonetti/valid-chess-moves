@@ -31,6 +31,6 @@ export function Board(props: BoardProps) {
 
 const BoardContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(8, 80px);
-  grid-template-rows: repeat(8, 80px);
+  grid-template-columns: repeat(8, 72px);
+  grid-template-rows: repeat(8, 72px);
 `
