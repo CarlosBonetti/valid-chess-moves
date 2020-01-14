@@ -25,6 +25,7 @@ export const Button = styled.button(
     border-color: ${props.primary ? props.theme.board.whiteBg : "white"};
     text-align: center;
     text-decoration: none;
+    font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
     width: ${props.block && "100%"};
