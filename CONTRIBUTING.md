@@ -1,7 +1,7 @@
 # Requirements
 
 - [Git](https://git-scm.com/)
-- [Node 8+](https://nodejs.org/)
+- [Node 10+](https://nodejs.org/)
 - [Yarn](https://yarnpkg.com)
 
 # Getting started

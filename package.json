@@ -4,6 +4,9 @@
   "repository": "https://github.com/CarlosBonetti/valid-chess-moves.git",
   "author": "Carlos Bonetti <carlosbonetti.mail@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
   "scripts": {
     "install": "yarn --cwd server install && yarn --cwd web install",
     "build": "yarn --cwd server build && yarn --cwd web build",
