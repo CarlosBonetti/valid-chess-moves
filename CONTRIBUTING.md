@@ -20,6 +20,7 @@ If you want to run all projects test, use `yarn test`.
 
 - [Typescript](https://www.typescriptlang.org/) as main programming language
 - [Prettier](https://prettier.io/) for code formatting
+- [CircleCI](https://circleci.com/) for continuous integration
 - Server
   - [Express](https://expressjs.com/) for the REST API server
   - [Jest](https://jestjs.io/) and [Supertest](https://www.npmjs.com/package/supertest) for testing
