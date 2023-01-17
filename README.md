@@ -41,7 +41,7 @@ Example of a valid request:
 
 ## Knight moves algorithm
 
-The algorithm used to find the Knight moves was built thinking in clarity and ease of understanding of performance. So it is based in a _predicate_.
+The algorithm used to find the Knight moves was built thinking in clarity and ease of understanding instead of performance. So it is based in a _predicate_.
 
 A predicate called `isValidKnightMove` was built. It receives a start and finish chess positions in algebraic notation and returns whether that move is valid for the Knight.
 
